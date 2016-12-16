@@ -21,7 +21,7 @@ public class Crawler {
 
   private List<String> categoriesToCrawl = new ArrayList<>();
 
-  private CrawlerDao<Application, String> appDao;
+  private ApplicationDao appDao;
   private CrawlerDao<Developer, String> developerDao;
   private TopAppsDao topAppDao;
   private TopAppStatisticsDao topAppStatisticsDao;
@@ -162,5 +162,24 @@ public class Crawler {
     });
     similarAppsDao.flush();
     similarAppsStatisticsDao.flush();
+  }
+
+  public void downloadSimilarAppsWithoutApp() throws SQLException {
+    List<String> appIds = similarAppsDao.getAppIdsWithoutApps();
+    appIds.parallelStream().flatMap(appId -> {
+      try {
+        loadAndStoreApp(appId);
+        return null;
+      } catch (IOException | SQLException | PlayException e) {
+        e.printStackTrace();
+        return Stream.of(e);
+      }
+    }).reduce((ex1, ex2) -> {
+      ex1.addSuppressed(ex2);
+      return ex1;
+    }).ifPresent(ex -> {
+      throw new RuntimeException(ex);
+    });
+    appDao.flush();
   }
 }

@@ -28,6 +28,7 @@ public class Main {
       crawler.downloadTopLists(PlayUrls.DEFAULT_LOCALE);
       crawler.downloadTopListAppData();
       crawler.downloadSimilarApps();
+      crawler.downloadSimilarAppsWithoutApp();
 
 
     } catch (SQLException e) {

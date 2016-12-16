@@ -2,7 +2,7 @@ package org.ogham.database.model;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
-import org.ogham.database.dao.CrawlerDao;
+import org.ogham.database.dao.ApplicationDao;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 /**
  * @author Timothe Genzmer 546765
  */
-@DatabaseTable(tableName = "applications", daoClass = CrawlerDao.class)
+@DatabaseTable(tableName = "applications", daoClass = ApplicationDao.class)
 public class Application extends AbstractModelParent {
 
   public static final String APP_ID = "id";
