@@ -4,6 +4,7 @@ import com.j256.ormlite.jdbc.JdbcPooledConnectionSource;
 import com.j256.ormlite.logger.LocalLog;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
+import org.ogham.crawler.Crawler;
 import org.ogham.database.model.*;
 import org.ogham.play.PlayUrls;
 import org.ogham.play.exceptions.PlayException;
