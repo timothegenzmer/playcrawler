@@ -27,7 +27,7 @@ public class ApplicationTask extends CrawlerTask {
   @Override
   public void run() {
     try {
-      System.out.println("Download and store app: " + appId);
+      //System.out.println("Download and store app: " + appId);
       loadAndStoreApp(appId);
     } catch (PlayException e) {
       System.err.println(e.getMessage());
@@ -38,6 +38,6 @@ public class ApplicationTask extends CrawlerTask {
 
   private void loadAndStoreApp(String appId) throws IOException, SQLException, PlayException {
     Application app = playClient.getApplication(appId);
-    appDao.createIfNotExists(app);
+    appDao.create(app);
   }
 }

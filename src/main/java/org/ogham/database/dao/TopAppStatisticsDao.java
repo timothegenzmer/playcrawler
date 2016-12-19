@@ -11,7 +11,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TopAppStatisticsDao extends CrawlerDao<TopAppStatistics, Long> {
+public class TopAppStatisticsDao extends BatchedCrawlerDao<TopAppStatistics, Long> {
 
   public static final long MINUTE = 60 * 1000;
   public static final long HOUR = 60 * MINUTE;

@@ -30,7 +30,7 @@ public class PlayClient {
 
   private CloseableHttpClient client;
 
-  public PlayClient() {
+  public PlayClient(int maxConnections) {
     RequestConfig.Builder requestConfig = RequestConfig.custom();
     requestConfig.setConnectTimeout(30 * 1000);
     requestConfig.setConnectionRequestTimeout(30 * 1000);
@@ -39,6 +39,8 @@ public class PlayClient {
 
     HttpClientBuilder clientBuilder = HttpClientBuilder.create();
     clientBuilder.setDefaultRequestConfig(requestConfig.build());
+    clientBuilder.setMaxConnTotal(maxConnections);
+    clientBuilder.setMaxConnPerRoute(maxConnections);
     clientBuilder.disableCookieManagement();
     clientBuilder.setUserAgent("Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.71 Safari/537.36");
     client = clientBuilder.build();

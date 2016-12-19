@@ -11,10 +11,11 @@ import org.ogham.database.dao.SimilarAppsDao;
 public class SimilarApplication extends SequentialModelParent {
 
   public static final String APPLICATION_ID = "applicationId";
+  public static final String SIMILAR_APP_ID = "similarAppId";
 
   @DatabaseField(canBeNull = false, uniqueCombo = true, index = true, columnName = APPLICATION_ID)
   private String applicationId;
-  @DatabaseField(canBeNull = false, uniqueCombo = true, index = true)
+  @DatabaseField(canBeNull = false, uniqueCombo = true, index = true, columnName = SIMILAR_APP_ID)
   private String similarAppId;
 
   @SuppressWarnings("unused")

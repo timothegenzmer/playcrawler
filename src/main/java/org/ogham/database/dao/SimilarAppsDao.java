@@ -43,10 +43,9 @@ public class SimilarAppsDao extends BatchedCrawlerDao<SimilarApplication, Long> 
     Dao<Application, String> apps = DaoManager.createDao(connectionSource, Application.class);
 
     QueryBuilder<SimilarApplication, Long> query = queryBuilder();
-    query.where().notIn(SimilarApplication.APPLICATION_ID, apps.queryBuilder().selectColumns(Application.APP_ID));
-    query.distinct();
+    query.where().notIn(SimilarApplication.SIMILAR_APP_ID, apps.queryBuilder().selectColumns(Application.APP_ID));
 
     List<SimilarApplication> appList = query.query();
-    return appList.stream().map(SimilarApplication::getApplicationId).collect(Collectors.toList());
+    return appList.stream().map(SimilarApplication::getSimilarAppId).distinct().collect(Collectors.toList());
   }
 }

@@ -10,21 +10,28 @@ import java.util.List;
 
 public class BatchedCrawlerDao<T extends AbstractModelParent, ID> extends CrawlerDao<T, ID> {
 
-  private static final int BATCH_SIZE = 1000;
+  private int batchSize = 100;
 
-  private List<T> buffer = new ArrayList<>(BATCH_SIZE);
+  private List<T> buffer;
 
 
   public BatchedCrawlerDao(Class<T> dataClass) throws SQLException {
     super(dataClass);
+    buffer = new ArrayList<>(batchSize);
   }
 
   public BatchedCrawlerDao(ConnectionSource connectionSource, Class<T> dataClass) throws SQLException {
     super(connectionSource, dataClass);
+    buffer = new ArrayList<>(batchSize);
   }
 
   public BatchedCrawlerDao(ConnectionSource connectionSource, DatabaseTableConfig<T> tableConfig) throws SQLException {
     super(connectionSource, tableConfig);
+    buffer = new ArrayList<>(batchSize);
+  }
+
+  public void setBatchSize(int batchSize) {
+    this.batchSize = batchSize;
   }
 
   @Override
@@ -41,6 +48,7 @@ public class BatchedCrawlerDao<T extends AbstractModelParent, ID> extends Crawle
   }
 
   public synchronized void flush() throws SQLException {
+    System.out.println("Flush batched Dao");
     callBatchTasks(() -> {
       for (T data : buffer) {
         super.create(data);
@@ -51,7 +59,7 @@ public class BatchedCrawlerDao<T extends AbstractModelParent, ID> extends Crawle
   }
 
   private void flushOnLimit() throws SQLException {
-    if (buffer.size() >= BATCH_SIZE) {
+    if (buffer.size() >= batchSize) {
       flush();
     }
   }

@@ -24,6 +24,8 @@ import java.util.concurrent.TimeUnit;
  */
 public class Crawler {
 
+  private static final int NUMBER_OF_THREADS = 20;
+
   private List<String> categoriesToCrawl = new ArrayList<>();
 
   private ApplicationDao appDao;
@@ -36,7 +38,7 @@ public class Crawler {
 
   private ExecutorService executor;
 
-  private PlayClient client = new PlayClient();
+  private PlayClient client = new PlayClient(NUMBER_OF_THREADS);
 
   public Crawler(ConnectionSource connectionSource) throws SQLException, IOException, PlayException {
     appDao = DaoManager.createDao(connectionSource, Application.class);
@@ -74,12 +76,15 @@ public class Crawler {
    * @throws SQLException
    */
   public void downloadTopLists(String locale) throws SQLException {
+    System.out.println("Download Top Lists");
     List<Pair<String, String>> toDownload = topAppStatisticsDao.getCollectionsToDownload();
 
     initExecutor();
     toDownload.forEach(s -> executor.execute(getCollectionTask(s.k, s.v, locale)));
 
     waitForExecutor();
+    topAppDao.flush();
+    topAppStatisticsDao.flush();
   }
 
   private CollectionTask getCollectionTask(String category, String collection, String locale) {
@@ -87,6 +92,7 @@ public class Crawler {
   }
 
   public void downloadSimilarApps() throws SQLException {
+    System.out.println("Download Similar Apps");
     List<String> appIds = similarAppsDao.getAppIdsWithoutSimilarApps();
 
     initExecutor();
@@ -103,6 +109,7 @@ public class Crawler {
   }
 
   public void downloadSimilarAppsWithoutApp() throws SQLException {
+    System.out.println("Download SimilarApps Without App");
     List<String> appIds = similarAppsDao.getAppIdsWithoutApps();
     downloadsApps(appIds);
   }
@@ -116,7 +123,7 @@ public class Crawler {
   }
 
   private void initExecutor() {
-    this.executor = Executors.newFixedThreadPool(100);
+    this.executor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
   }
 
   private void waitForExecutor() {

@@ -11,17 +11,23 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class TopAppsDao extends CrawlerDao<TopApp, Long> {
+public class TopAppsDao extends BatchedCrawlerDao<TopApp, Long> {
+
+  private static final int BATCH_SIZE = 2000;
+
   public TopAppsDao(Class<TopApp> dataClass) throws SQLException {
     super(dataClass);
+    setBatchSize(BATCH_SIZE);
   }
 
   public TopAppsDao(ConnectionSource connectionSource, Class<TopApp> dataClass) throws SQLException {
     super(connectionSource, dataClass);
+    setBatchSize(BATCH_SIZE);
   }
 
   public TopAppsDao(ConnectionSource connectionSource, DatabaseTableConfig<TopApp> tableConfig) throws SQLException {
     super(connectionSource, tableConfig);
+    setBatchSize(BATCH_SIZE);
   }
 
   public List<String> getTopAppsNotDownloaded() throws SQLException {

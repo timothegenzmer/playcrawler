@@ -37,7 +37,7 @@ public class SimilarAppsTask extends CrawlerTask {
       int statuscode = 200;
       int similarAppsSize = 0;
       try {
-        System.out.println("Download similar apps: " + appId);
+        //System.out.println("Download similar apps: " + appId);
         List<SimilarApplication> similarApps = playClient.getSimilarApplications(appId);
         similarAppsDao.createAll(similarApps);
         similarAppsSize = similarApps.size();
