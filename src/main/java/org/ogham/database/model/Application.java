@@ -14,6 +14,8 @@ import java.util.regex.Pattern;
 public class Application extends AbstractModelParent {
 
   public static final String APP_ID = "id";
+  public static final String DEVELOPER_ID = "developerId";
+
 
   private static final String ID_GROUP = "([a-zA-Z0-9_+,:~;'!?*/@$%().-]+?)";
 
@@ -36,7 +38,7 @@ public class Application extends AbstractModelParent {
   private String category;
   @DatabaseField
   private String name;
-  @DatabaseField(index = true)
+  @DatabaseField(index = true, columnName = DEVELOPER_ID)
   private String developerId;
   @DatabaseField(index = true)
   private String devId;

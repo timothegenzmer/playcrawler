@@ -48,14 +48,17 @@ public class BatchedCrawlerDao<T extends AbstractModelParent, ID> extends Crawle
   }
 
   public synchronized void flush() throws SQLException {
-    System.out.println("Flush batched Dao");
-    callBatchTasks(() -> {
-      for (T data : buffer) {
-        super.create(data);
-      }
-      return null;
-    });
-    buffer.clear();
+    try {
+      System.out.println("Flush batched Dao");
+      callBatchTasks(() -> {
+        for (T data : buffer) {
+          super.create(data);
+        }
+        return null;
+      });
+    } finally {
+      buffer.clear();
+    }
   }
 
   private void flushOnLimit() throws SQLException {

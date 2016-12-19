@@ -6,6 +6,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.ogham.database.model.Application;
+import org.ogham.database.model.DeveloperApplication;
 import org.ogham.database.model.SimilarApplication;
 import org.ogham.play.exceptions.ContentForbidden;
 import org.ogham.play.exceptions.ContentNotFound;
@@ -89,6 +90,16 @@ public class PlayClient {
     Matcher m = categoryTopSellingFreePattern.matcher(similarPage);
     while (m.find()) {
       results.add(new SimilarApplication(appId, m.group(1)));
+    }
+    return results;
+  }
+
+  public List<DeveloperApplication> getDevelopperApplications(String developerId) throws IOException, PlayException {
+    List<DeveloperApplication> results = new ArrayList<>();
+    String developerApps = getHTML(PlayUrls.getDeveloperUri(developerId));
+    Matcher m = categoryTopSellingFreePattern.matcher(developerApps);
+    while (m.find()) {
+      results.add(new DeveloperApplication(developerId, m.group(1)));
     }
     return results;
   }

@@ -4,6 +4,7 @@ import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.support.ConnectionSource;
 import org.ogham.crawler.tasks.ApplicationTask;
 import org.ogham.crawler.tasks.CollectionTask;
+import org.ogham.crawler.tasks.DeveloperTask;
 import org.ogham.crawler.tasks.SimilarAppsTask;
 import org.ogham.database.dao.*;
 import org.ogham.database.model.*;
@@ -24,12 +25,15 @@ import java.util.concurrent.TimeUnit;
  */
 public class Crawler {
 
-  private static final int NUMBER_OF_THREADS = 20;
+  private static final int NUMBER_OF_THREADS = 30;
 
   private List<String> categoriesToCrawl = new ArrayList<>();
 
   private ApplicationDao appDao;
-  private CrawlerDao<Developer, String> developerDao;
+
+  private DeveloperDao developerDao;
+  private DeveloperStatsDao developerStatsDao;
+
   private TopAppsDao topAppDao;
   private TopAppStatisticsDao topAppStatisticsDao;
 
@@ -42,7 +46,10 @@ public class Crawler {
 
   public Crawler(ConnectionSource connectionSource) throws SQLException, IOException, PlayException {
     appDao = DaoManager.createDao(connectionSource, Application.class);
-    developerDao = DaoManager.createDao(connectionSource, Developer.class);
+
+    developerDao = DaoManager.createDao(connectionSource, DeveloperApplication.class);
+    developerStatsDao = DaoManager.createDao(connectionSource, DeveloperApplicationStatistics.class);
+
     similarAppsDao = DaoManager.createDao(connectionSource, SimilarApplication.class);
     similarAppsStatisticsDao = DaoManager.createDao(connectionSource, SimilarApplicationStatistic.class);
 
@@ -113,6 +120,24 @@ public class Crawler {
     List<String> appIds = similarAppsDao.getAppIdsWithoutApps();
     downloadsApps(appIds);
   }
+
+  public void downloadDeveloperApps() throws SQLException {
+    System.out.println("Download Developer Apps Without App");
+    List<String> developerIds = developerDao.getDeveloperIdsWithoutApps();
+
+    initExecutor();
+    developerIds.forEach(s -> executor.execute(getDeveloperTask(s)));
+
+    waitForExecutor();
+
+    developerDao.flush();
+    developerStatsDao.flush();
+  }
+
+  private DeveloperTask getDeveloperTask(String developerId) {
+    return new DeveloperTask(client, developerDao, developerStatsDao, developerId);
+  }
+
 
   private void downloadsApps(List<String> appIds) throws SQLException {
     initExecutor();

@@ -6,7 +6,6 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import org.ogham.crawler.Crawler;
 import org.ogham.database.model.*;
-import org.ogham.play.PlayUrls;
 import org.ogham.play.exceptions.PlayException;
 
 import java.io.IOException;
@@ -26,10 +25,13 @@ public class Main {
 
       Crawler crawler = new Crawler(connectionSource);
 
-      crawler.downloadTopLists(PlayUrls.DEFAULT_LOCALE);
-      crawler.downloadTopListAppData();
-      crawler.downloadSimilarApps();
-      crawler.downloadSimilarAppsWithoutApp();
+      //crawler.downloadTopLists(PlayUrls.DEFAULT_LOCALE);
+      //crawler.downloadTopListAppData();
+
+      //crawler.downloadSimilarApps();
+      //crawler.downloadSimilarAppsWithoutApp();
+
+      crawler.downloadDeveloperApps();
 
 
     } catch (SQLException e) {
@@ -44,9 +46,13 @@ public class Main {
   private static void setupDatabase(ConnectionSource connectionSource) throws SQLException {
     TableUtils.createTableIfNotExists(connectionSource, Application.class);
     TableUtils.createTableIfNotExists(connectionSource, Developer.class);
+
     TableUtils.createTableIfNotExists(connectionSource, SimilarApplication.class);
     TableUtils.createTableIfNotExists(connectionSource, SimilarApplicationStatistic.class);
+
     TableUtils.createTableIfNotExists(connectionSource, DeveloperApplication.class);
+    TableUtils.createTableIfNotExists(connectionSource, DeveloperApplicationStatistics.class);
+
     TableUtils.createTableIfNotExists(connectionSource, TopApp.class);
     TableUtils.createTableIfNotExists(connectionSource, TopAppStatistics.class);
 

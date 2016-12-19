@@ -3,8 +3,10 @@ package org.ogham.play;
 
 import org.apache.http.client.utils.URIBuilder;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLDecoder;
 
 /**
  * @author Timothe Genzmer 546765
@@ -88,17 +90,22 @@ public class PlayUrls {
   }
 
   public static URI getAppUri(String appId) {
-    try {
-      return protoUriBuilder(APP_URL).addParameter(ID_PARAM, appId).build();
-    } catch (URISyntaxException e) {
-      throw new RuntimeException(e);
-    }
+    return getIdRoute(APP_URL, appId);
   }
 
   public static URI getSimilarAppUri(String appId) {
+    return getIdRoute(SIMILAR_URL, appId);
+  }
+
+  public static URI getDeveloperUri(String developerId) {
+    return getIdRoute(DEVELOPER_URL, developerId);
+  }
+
+  private static URI getIdRoute(String path, String id) {
     try {
-      return protoUriBuilder(SIMILAR_URL).addParameter(ID_PARAM, appId).build();
-    } catch (URISyntaxException e) {
+      id = URLDecoder.decode(id, "UTF-8");
+      return protoUriBuilder(path).addParameter(ID_PARAM, id).build();
+    } catch (URISyntaxException | UnsupportedEncodingException e) {
       throw new RuntimeException(e);
     }
   }
@@ -111,4 +118,6 @@ public class PlayUrls {
     builder.addParameter(LANGUAGE_PARAM, DEFAULT_LANGUAGE);
     return builder;
   }
+
+
 }
