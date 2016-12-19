@@ -6,7 +6,10 @@ import org.ogham.database.dao.SimilarAppsStatisticsDao;
 
 @DatabaseTable(tableName = "similar_application_stat", daoClass = SimilarAppsStatisticsDao.class)
 public class SimilarApplicationStatistic extends SequentialModelParent {
-  @DatabaseField
+
+  public static final String APP_ID = "appId";
+
+  @DatabaseField(columnName = APP_ID)
   private String appId;
   @DatabaseField
   private int numberOfApps;

@@ -7,6 +7,7 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.DatabaseTableConfig;
 import org.ogham.database.model.Application;
 import org.ogham.database.model.SimilarApplication;
+import org.ogham.database.model.SimilarApplicationStatistic;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -31,9 +32,13 @@ public class SimilarAppsDao extends BatchedCrawlerDao<SimilarApplication, Long> 
 
   public List<String> getAppIdsWithoutSimilarApps() throws SQLException {
     Dao<Application, String> apps = DaoManager.createDao(connectionSource, Application.class);
+    SimilarAppsStatisticsDao statisticsDao = DaoManager.createDao(connectionSource, SimilarApplicationStatistic.class);
+
+    QueryBuilder<SimilarApplicationStatistic, Long> similarQuery = statisticsDao.queryBuilder();
+    similarQuery.selectColumns(SimilarApplicationStatistic.APP_ID).distinct();
 
     QueryBuilder<Application, String> query = apps.queryBuilder();
-    query.where().notIn(Application.APP_ID, queryBuilder().selectColumns(SimilarApplication.APPLICATION_ID).distinct());
+    query.where().notIn(Application.APP_ID, similarQuery);
 
     List<Application> appList = query.query();
     return appList.stream().map(Application::getId).collect(Collectors.toList());
