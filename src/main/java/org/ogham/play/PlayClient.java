@@ -26,6 +26,8 @@ import java.util.regex.Pattern;
  */
 public class PlayClient {
 
+  private static final int TIMEOUT = 60 * 1000;
+
   private static final Pattern categoryPattern = Pattern.compile("href=\"/store/apps/category/(\\w+)\" ");
   private static final Pattern categoryTopSellingFreePattern = Pattern.compile("class=\"title\" href=\"/store/apps/details\\?id=(.*?)\"");
 
@@ -33,9 +35,9 @@ public class PlayClient {
 
   public PlayClient(int maxConnections) {
     RequestConfig.Builder requestConfig = RequestConfig.custom();
-    requestConfig.setConnectTimeout(30 * 1000);
-    requestConfig.setConnectionRequestTimeout(30 * 1000);
-    requestConfig.setSocketTimeout(30 * 1000);
+    requestConfig.setConnectTimeout(TIMEOUT);
+    requestConfig.setConnectionRequestTimeout(TIMEOUT);
+    requestConfig.setSocketTimeout(TIMEOUT);
 
 
     HttpClientBuilder clientBuilder = HttpClientBuilder.create();

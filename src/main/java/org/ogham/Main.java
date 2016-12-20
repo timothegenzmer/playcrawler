@@ -6,6 +6,7 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import org.ogham.crawler.Crawler;
 import org.ogham.database.model.*;
+import org.ogham.play.PlayUrls;
 import org.ogham.play.exceptions.PlayException;
 
 import java.io.IOException;
@@ -25,20 +26,17 @@ public class Main {
 
       Crawler crawler = new Crawler(connectionSource);
 
-      //crawler.downloadTopLists(PlayUrls.DEFAULT_LOCALE);
-      //crawler.downloadTopListAppData();
+      crawler.downloadTopLists(PlayUrls.DEFAULT_LOCALE);
+      crawler.downloadTopListAppData();
 
-      //crawler.downloadSimilarApps();
-      //crawler.downloadSimilarAppsWithoutApp();
+      crawler.downloadSimilarApps();
+      crawler.downloadSimilarAppsWithoutApp();
 
       crawler.downloadDeveloperApps();
+      crawler.getDeveloperAppsNotDownloaded();
 
 
-    } catch (SQLException e) {
-      e.printStackTrace();
-    } catch (IOException e) {
-      e.printStackTrace();
-    } catch (PlayException e) {
+    } catch (SQLException | IOException | PlayException e) {
       e.printStackTrace();
     }
   }

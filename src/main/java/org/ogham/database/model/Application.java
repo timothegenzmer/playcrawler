@@ -94,8 +94,7 @@ public class Application extends AbstractModelParent {
     if (m.find()) {
       a.category = m.group(1);
     } else {
-      System.out.println(html);
-      throw new IllegalArgumentException("Could not find app's category for app: " + id);
+      //there are a few apps without category
     }
 
     m = patternDeveloper.matcher(html);

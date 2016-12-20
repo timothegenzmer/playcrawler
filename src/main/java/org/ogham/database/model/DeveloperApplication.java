@@ -9,9 +9,12 @@ import org.ogham.database.dao.DeveloperDao;
  */
 @DatabaseTable(tableName = "developer_application", daoClass = DeveloperDao.class)
 public class DeveloperApplication extends SequentialModelParent {
+
+  public static final String APPLICATION_ID = "applicationId";
+
   @DatabaseField(canBeNull = false, uniqueCombo = true)
   private String developerId;
-  @DatabaseField(canBeNull = false, uniqueCombo = true)
+  @DatabaseField(canBeNull = false, uniqueCombo = true, columnName = APPLICATION_ID)
   private String applicationId;
 
   public DeveloperApplication() {

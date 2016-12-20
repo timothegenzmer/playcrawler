@@ -122,7 +122,7 @@ public class Crawler {
   }
 
   public void downloadDeveloperApps() throws SQLException {
-    System.out.println("Download Developer Apps Without App");
+    System.out.println("Download Developer Apps");
     List<String> developerIds = developerDao.getDeveloperIdsWithoutApps();
 
     initExecutor();
@@ -136,6 +136,12 @@ public class Crawler {
 
   private DeveloperTask getDeveloperTask(String developerId) {
     return new DeveloperTask(client, developerDao, developerStatsDao, developerId);
+  }
+
+  public void getDeveloperAppsNotDownloaded() throws SQLException {
+    System.out.println("Download Developer Apps Without App");
+    List<String> appIds = developerDao.getAppIdsWithoutApp();
+    downloadsApps(appIds);
   }
 
 

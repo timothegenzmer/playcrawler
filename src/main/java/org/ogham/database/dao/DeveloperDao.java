@@ -50,4 +50,20 @@ public class DeveloperDao extends BatchedCrawlerDao<DeveloperApplication, Long> 
     devIds.forEach(row -> developerIds.add(row[0]));
     return developerIds;
   }
+
+  public List<String> getAppIdsWithoutApp() throws SQLException {
+    Dao<Application, String> apps = DaoManager.createDao(connectionSource, Application.class);
+    QueryBuilder<Application, String> appsQuery = apps.queryBuilder();
+    appsQuery.selectColumns(Application.APP_ID);
+
+    QueryBuilder<DeveloperApplication, Long> developerQuery = queryBuilder();
+    developerQuery.where().notIn(DeveloperApplication.APPLICATION_ID, appsQuery);
+    developerQuery.selectColumns(DeveloperApplication.APPLICATION_ID);
+
+    GenericRawResults<String[]> appQuery = developerQuery.queryRaw();
+
+    List<String> appIds = new ArrayList<>();
+    appQuery.forEach(row -> appIds.add(row[0]));
+    return appIds;
+  }
 }
