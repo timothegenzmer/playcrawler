@@ -3,10 +3,8 @@ package org.ogham.play;
 
 import org.apache.http.client.utils.URIBuilder;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URLDecoder;
 
 /**
  * @author Timothe Genzmer 546765
@@ -103,9 +101,8 @@ public class PlayUrls {
 
   private static URI getIdRoute(String path, String id) {
     try {
-      id = URLDecoder.decode(id, "UTF-8");
       return protoUriBuilder(path).addParameter(ID_PARAM, id).build();
-    } catch (URISyntaxException | UnsupportedEncodingException e) {
+    } catch (URISyntaxException e) {
       throw new RuntimeException(e);
     }
   }

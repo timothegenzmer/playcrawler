@@ -3,6 +3,7 @@ package org.ogham.database.model;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import org.ogham.database.dao.ApplicationDao;
+import org.ogham.util.Decoder;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -99,11 +100,11 @@ public class Application extends AbstractModelParent {
 
     m = patternDeveloper.matcher(html);
     if (m.find()) {
-      a.developerId = m.group(1);
+      a.developerId = Decoder.decode(m.group(1));
     } else {
       m = patternDev.matcher(html);
       if (m.find()) {
-        a.devId = m.group(1);
+        a.devId = Decoder.decode(m.group(1));
       } else {
         System.out.println(html);
         throw new IllegalArgumentException("Could not find app's developer for app: " + id);
@@ -211,6 +212,10 @@ public class Application extends AbstractModelParent {
 
   public String getCategory() {
     return category;
+  }
+
+  public void setDeveloperId(String developerId) {
+    this.developerId = developerId;
   }
 
   public String getId() {

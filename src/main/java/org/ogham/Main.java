@@ -35,7 +35,6 @@ public class Main {
       crawler.downloadDeveloperApps();
       crawler.getDeveloperAppsNotDownloaded();
 
-
     } catch (SQLException | IOException | PlayException e) {
       e.printStackTrace();
     }

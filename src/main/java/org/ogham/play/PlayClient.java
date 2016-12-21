@@ -11,6 +11,7 @@ import org.ogham.database.model.SimilarApplication;
 import org.ogham.play.exceptions.ContentForbidden;
 import org.ogham.play.exceptions.ContentNotFound;
 import org.ogham.play.exceptions.PlayException;
+import org.ogham.util.Decoder;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * @author Timothe Genzmer 546765
@@ -68,10 +70,7 @@ public class PlayClient {
     for (int i = 0; i <= 500; i += numberOfApps) {
       URI collectionUri = PlayUrls.getCollectionUri(category, collection, i, numberOfApps, locale);
       String html = getHTML(collectionUri);
-      Matcher m = categoryTopSellingFreePattern.matcher(html);
-      while (m.find()) {
-        results.add(m.group(1));
-      }
+      results.addAll(getApps(html));
       if (results.size() != i + numberOfApps) {
         //System.out.println(category + " " + collection + " is exhausted at " + appIds.size());
         //collection is exhausted
@@ -87,21 +86,22 @@ public class PlayClient {
   }
 
   public List<SimilarApplication> getSimilarApplications(String appId) throws IOException, PlayException {
-    List<SimilarApplication> results = new ArrayList<>();
     String similarPage = getHTML(PlayUrls.getSimilarAppUri(appId));
-    Matcher m = categoryTopSellingFreePattern.matcher(similarPage);
-    while (m.find()) {
-      results.add(new SimilarApplication(appId, m.group(1)));
-    }
-    return results;
+
+    return getApps(similarPage).stream().map(s -> new SimilarApplication(appId, s)).collect(Collectors.toList());
   }
 
   public List<DeveloperApplication> getDevelopperApplications(String developerId) throws IOException, PlayException {
-    List<DeveloperApplication> results = new ArrayList<>();
     String developerApps = getHTML(PlayUrls.getDeveloperUri(developerId));
-    Matcher m = categoryTopSellingFreePattern.matcher(developerApps);
+
+    return getApps(developerApps).stream().map(s -> new DeveloperApplication(developerId, s)).collect(Collectors.toList());
+  }
+
+  private List<String> getApps(String html) {
+    List<String> results = new ArrayList<>();
+    Matcher m = categoryTopSellingFreePattern.matcher(html);
     while (m.find()) {
-      results.add(new DeveloperApplication(developerId, m.group(1)));
+      results.add(Decoder.decode(m.group(1)));
     }
     return results;
   }

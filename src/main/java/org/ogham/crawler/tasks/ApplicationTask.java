@@ -28,16 +28,12 @@ public class ApplicationTask extends CrawlerTask {
   public void run() {
     try {
       //System.out.println("Download and store app: " + appId);
-      loadAndStoreApp(appId);
+      Application app = playClient.getApplication(appId);
+      appDao.create(app);
     } catch (PlayException e) {
       System.err.println(e.getMessage());
     } catch (SQLException | IOException e) {
       e.printStackTrace();
     }
-  }
-
-  private void loadAndStoreApp(String appId) throws IOException, SQLException, PlayException {
-    Application app = playClient.getApplication(appId);
-    appDao.create(app);
   }
 }
