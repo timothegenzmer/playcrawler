@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class Crawler {
 
-  private static final int NUMBER_OF_THREADS = 30;
+  private static final int NUMBER_OF_THREADS = 200;
 
   private List<String> categoriesToCrawl = new ArrayList<>();
 
